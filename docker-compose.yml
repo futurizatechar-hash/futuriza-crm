@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  crm-ui:
+    build: .
+    restart: always
+    ports:
+      - "5174:80"
+    networks:
+      - futuriza-net
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    restart: always
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - NODE_ENV=production
+      - WEBHOOK_URL=http://localhost:5678/
+      - GENERIC_TIMEZONE=America/Argentina/Cordoba
+    volumes:
+      - n8n_data:/home/node/.n8n
+    networks:
+      - futuriza-net
+
+  typebot-db:
+    image: postgres:15
+    restart: always
+    # Eliminamos mapeo de puertos hacia afuera, queda aislado en la red interna
+    expose:
+      - "5432"
+    environment:
+      - POSTGRES_DB=typebot
+      - POSTGRES_PASSWORD=typebotpass
+    volumes:
+      - typebot_data:/var/lib/postgresql/data
+    networks:
+      - futuriza-net
+
+  typebot-builder:
+    image: baptistearno/typebot-builder:latest
+    restart: always
+    depends_on:
+      - typebot-db
+    ports:
+      - "8080:3000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:typebotpass@typebot-db:5432/typebot
+      - NEXTAUTH_URL=http://localhost:8080
+      - NEXT_PUBLIC_VIEWER_URL=http://localhost:8081
+      - ENCRYPTION_SECRET=clave_secreta_futuriza_123456789
+    networks:
+      - futuriza-net
+
+  typebot-viewer:
+    image: baptistearno/typebot-viewer:latest
+    restart: always
+    depends_on:
+      - typebot-db
+    ports:
+      - "8081:3000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:typebotpass@typebot-db:5432/typebot
+      - NEXT_PUBLIC_VIEWER_URL=http://localhost:8081
+    networks:
+      - futuriza-net
+
+networks:
+  futuriza-net:
+    driver: bridge
+
+volumes:
+  n8n_data:
+  typebot_data:

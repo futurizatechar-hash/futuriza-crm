@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../supabaseClient';
-import { Mail, Lock, LogIn, Shield } from 'lucide-react';
+import { Mail, Lock, LogIn } from 'lucide-react';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -16,37 +16,39 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#020617] p-4 text-slate-300 font-sans bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-blend-overlay">
-      <div className="w-full max-w-md bg-[#0B1120] rounded-3xl p-10 shadow-2xl border border-slate-800 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4 sm:p-8 font-sans bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-blend-overlay relative overflow-hidden">
+      {/* Dynamic Background Elements for UI polish */}
+      <div className="absolute top-0 right-0 w-full md:w-1/2 h-screen bg-gradient-to-bl from-brand-cyan/5 to-transparent pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-full md:w-1/2 h-screen bg-gradient-to-tr from-brand-accent/5 to-transparent pointer-events-none"></div>
 
+      <div className="w-full max-w-[420px] glass-card relative z-10 p-8 sm:p-10 shadow-premium-hover border border-white">
+        
         {/* Glow effect behind the card */}
-        <div className="absolute -top-20 -left-20 w-64 h-64 bg-cyan-500/10 rounded-full blur-[80px] pointer-events-none"></div>
+        <div className="absolute -top-10 -right-10 w-48 h-48 bg-brand-cyan/15 rounded-full blur-[60px] pointer-events-none"></div>
 
         <div className="text-center mb-8 relative z-10 flex flex-col items-center">
-          {/* MODIFIED: Increased scale of circular logo container from w-24 (96px) to w-36 (144px).
-               Kept the masking strategy and blend effects that work. */}
-          <div className="w-36 h-36 rounded-full bg-black border-2 border-slate-700 flex items-center justify-center overflow-hidden p-3 drop-shadow-[0_0_15px_rgba(34,211,238,0.4)] shadow-inner">
-            <img src="/icon.jpg" alt="Futuriza Icon" className="h-full object-contain mix-blend-screen brightness-[0.8] contrast-[1.2]" />
+          {/* Responsive logo size */}
+          <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-white flex items-center justify-center overflow-hidden p-3 sm:p-4 shadow-sm mb-4 border border-slate-100 transition-transform hover:scale-105 duration-500">
+            <img src="/favicon.webp" alt="Futuriza Icon" className="w-[90%] h-[90%] object-contain" />
           </div>
 
-          {/* Re-aligned typography block below the scaled icon. Slightly increased margin-top. */}
-          <h2 className="text-3xl font-extrabold text-white mt-6 tracking-tighter">FUTURIZA</h2>
-          <h3 className="text-xs font-bold text-cyan-400 uppercase tracking-[0.3em] mt-2 pb-1 border-b border-cyan-500/10">CRM Automatizado</h3>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-dark tracking-tighter">FUTURIZA</h2>
+          <h3 className="text-[10px] sm:text-xs font-bold text-brand-accent uppercase tracking-[0.25em] mt-2 pb-1 border-b border-brand-accent/20">CRM Inteligente</h3>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-5 relative z-10">
+        <form onSubmit={handleLogin} className="space-y-4 sm:space-y-5 relative z-10">
           <div className="relative group">
-            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-cyan-400 transition-colors" />
-            <input type="email" placeholder="Email corporativo" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full bg-[#050B14] border border-slate-800/80 rounded-xl py-4 pl-12 pr-4 text-white placeholder-slate-600 focus:border-cyan-500 outline-none transition-all duration-200 shadow-inner" />
+            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-brand-accent transition-colors" />
+            <input type="email" placeholder="Email corporativo" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full bg-slate-50/50 border border-slate-200 rounded-xl py-3.5 sm:py-4 pl-11 pr-4 text-sm sm:text-base text-slate-700 placeholder-slate-400 focus:border-brand-accent focus:bg-white focus:ring-4 focus:ring-brand-accent/10 outline-none transition-all duration-200" />
           </div>
 
           <div className="relative group">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-cyan-400 transition-colors" />
-            <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} required className="w-full bg-[#050B14] border border-slate-800/80 rounded-xl py-4 pl-12 pr-4 text-white placeholder-slate-600 focus:border-cyan-500 outline-none transition-all duration-200 shadow-inner" />
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-brand-accent transition-colors" />
+            <input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} required className="w-full bg-slate-50/50 border border-slate-200 rounded-xl py-3.5 sm:py-4 pl-11 pr-4 text-sm sm:text-base text-slate-700 placeholder-slate-400 focus:border-brand-accent focus:bg-white focus:ring-4 focus:ring-brand-accent/10 outline-none transition-all duration-200" />
           </div>
 
-          <button type="submit" disabled={loading} className="w-full flex items-center justify-center gap-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-extrabold text-lg py-4 rounded-xl transition-all duration-200 disabled:opacity-50 shadow-[0_0_20px_rgba(34,211,238,0.3)]">
-            {loading ? 'Ingresando...' : <>Ingresar al Sistema <LogIn className="w-5 h-5" /></>}
+          <button type="submit" disabled={loading} className="w-full btn-primary text-base sm:text-lg mt-2 py-4">
+            {loading ? 'Validando...' : <>Ingresar al Sistema <LogIn className="w-5 h-5" /></>}
           </button>
         </form>
       </div>

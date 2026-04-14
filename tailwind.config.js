@@ -7,18 +7,23 @@ export default {
   theme: {
     extend: {
       colors: {
+        'brand-dark': '#0A192F',
+        'brand-light': '#FFFFFF',
+        'brand-accent': '#FF6B35',
+        'brand-cyan': '#00E5FF',
         slate: {
           950: '#020617',
         },
-        cyan: {
-          400: '#22d3ee',
-          500: '#06b6d4',
-        },
-        'neon-green': '#4ade80',
+      },
+      boxShadow: {
+        'glow-cyan': '0 0 25px rgba(0, 229, 255, 0.4)',
+        'glow-accent': '0 0 25px rgba(255, 107, 53, 0.4)',
+        'premium-light': '0 8px 30px rgba(0, 0, 0, 0.04)',
+        'premium-hover': '0 20px 40px rgba(0, 0, 0, 0.08)',
       },
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
-        display: ['Outfit', 'sans-serif'],
+        sans: ['"Open Sans"', 'Roboto', 'sans-serif'],
+        display: ['Montserrat', 'sans-serif'],
       },
     },
   },

@@ -1,5 +1,12 @@
-import { X, Phone, AlertCircle, Zap, Send, CheckCircle2, Trash2, MessageCircle, Shield } from 'lucide-react';
+import { X, Phone, AlertCircle, Zap, Send, CheckCircle2, Trash2, MessageCircle, Shield, Users, Mail, Globe } from 'lucide-react';
 import { COLUMNAS, SERVICIOS, PRIORIDADES } from '../lib/constants';
+
+// Extrae el tamaño de equipo/flota del campo resumen_chat
+function parseTeamSize(resumenChat) {
+  if (!resumenChat) return null;
+  const match = resumenChat.match(/Tama[ñn]o de equipo\/flota:\s*(.+)/i);
+  return match ? match[1].trim() : null;
+}
 
 export default function SlideOverPanel({ 
   lead, isOpen, onClose, onUpdateStatus, onUpdateField, onDelete, 
@@ -25,13 +32,38 @@ export default function SlideOverPanel({
           <div className="p-4 sm:p-6 flex-1 overflow-y-auto space-y-4 sm:space-y-6 custom-scrollbar bg-[#F8FAFC]">
             
             {/* Lead Header Card */}
-            <div className="bg-white rounded-xl p-4 sm:p-5 border border-slate-200 relative overflow-hidden flex justify-between items-start shadow-sm">
+            <div className="bg-white rounded-xl p-4 sm:p-5 border border-slate-200 relative overflow-hidden shadow-sm">
               <div className={`absolute top-0 left-0 w-1.5 h-full ${lead.prioridad === 'Alta' ? 'bg-red-500' : lead.prioridad === 'Baja' ? 'bg-slate-400' : 'bg-amber-400'}`}></div>
-              <div className="pl-3 sm:pl-2">
-                <h3 className="text-lg sm:text-2xl font-bold text-brand-dark mb-0.5 sm:mb-1 tracking-tight">{lead.empresa}</h3>
-                <p className="text-xs sm:text-sm text-slate-500 font-medium">{lead.nombre}</p>
+              <div className="flex justify-between items-start pl-3 sm:pl-2 mb-3">
+                <div>
+                  <h3 className="text-lg sm:text-2xl font-bold text-brand-dark mb-0.5 sm:mb-1 tracking-tight">{lead.empresa}</h3>
+                  <p className="text-xs sm:text-sm text-slate-500 font-medium">{lead.nombre}</p>
+                </div>
+                {lead.telefono && <a href={`https://wa.me/${lead.telefono.replace(/\D/g,'')}`} target="_blank" rel="noreferrer" className="bg-[#25D366]/10 border border-[#25D366]/20 p-2 sm:p-2.5 rounded-lg text-[#25D366] hover:bg-[#25D366]/20 transition-colors shrink-0"><Phone className="w-4 h-4 sm:w-5 sm:h-5"/></a>}
               </div>
-              {lead.telefono && <a href={`https://wa.me/${lead.telefono.replace(/\D/g,'')}`} target="_blank" rel="noreferrer" className="bg-[#25D366]/10 border border-[#25D366]/20 p-2 sm:p-2.5 rounded-lg text-[#25D366] hover:bg-[#25D366]/20 transition-colors"><Phone className="w-4 h-4 sm:w-5 sm:h-5"/></a>}
+
+              {/* Datos de contacto de solo lectura */}
+              <div className="pl-3 sm:pl-2 space-y-2 pt-3 border-t border-slate-100">
+                {lead.email && (
+                  <div className="flex items-center gap-2 text-xs text-slate-600">
+                    <Mail className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                    <a href={`mailto:${lead.email}`} className="hover:text-brand-accent transition-colors truncate font-medium">{lead.email}</a>
+                  </div>
+                )}
+                {parseTeamSize(lead.resumen_chat) && (
+                  <div className="flex items-center gap-2 text-xs text-slate-600">
+                    <Users className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                    <span className="font-medium">Equipo/Flota: </span>
+                    <span className="bg-brand-accent/10 text-brand-accent font-bold px-2 py-0.5 rounded-md border border-brand-accent/20">{parseTeamSize(lead.resumen_chat)}</span>
+                  </div>
+                )}
+                {lead.origen && (
+                  <div className="flex items-center gap-2 text-xs text-slate-500">
+                    <Globe className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                    <span>Origen: <span className="font-semibold">{lead.origen}</span></span>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Form Fields */}
